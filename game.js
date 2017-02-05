@@ -45,6 +45,30 @@ var background; // Background image
 var playerSpeed = 300; // Player speed
 var enemySpeed1 = 150; // Enemy walking minion speed
 
+var levelDesign = [
+  //Level 1
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                                                                                                                                                                                                          A",
+  "B                                              CMMD                                                                                                                                                                        A",
+  "B                E                   CMMD      AXXB                                                                                                                                          CMMMD    CD      CMMMMMMMMMMMMX",
+  "B              CMMMMD      CMMD      AXXB      AXXB                                                                                                                                CMMMD     AXXXB    AB      AXXXXXXXXXXXXX",
+  "B                          AXXB      AXXXD     AXXB                                       CMMMMMD                                                                          CMMMD             AXXXB    AB      AXXXXXXXXXXXXX",
+  "B            E    E        AXXXD   E AXXXB   E AXXB                                       AXXXXXB                                                                  CMMMD                     AXXXB    AB      AXXXXXXXXXXXXX",
+  "XMMMMMMMMMMMMMMMMMMMMMMMMMMXXXXXMMMMMXXXXXMMMMMXXXB  E  E    CMMMMMMMMMMD       CMMMMMMMMMXXXXXXXMMMMMMMD      CMMMMMMMMMMMMMMMMD                 CMMMMMMMMMMMMD                             AXXXB    AB      AXXXXXXXXXXXXX",
+  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMMMMMMMMMMXXXXXXXXXXXB    E  AXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB     CMMMMMD     AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXXX",
+  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMMMMMMMXXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB                 AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXXX",
+  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB                 AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXXX"
+];
+
 function preload() {
   game.load.baseURL = "assets/";
   game.stage.backgroundColor = "#78af4c"; // 5ea9dd
@@ -53,7 +77,7 @@ function preload() {
   game.load.spritesheet("character_main_jumping", "sprites/character_main_jumping_2.png", 32, 64);
   game.load.spritesheet("character_bad_1", "sprites/character_bad_1_spritesheet.png", 32, 32);
   game.load.image("background_1", "backgrounds/1.png");
-  game.world.setBounds(0, 0, 6528, 640); // 32 * number of characters per line(204)
+  game.world.setBounds(0, 0, levelDesign[0].length*32, 640); // 32 * number of characters per line(204)
 }
 
 function KillPlayer(player) {
@@ -69,10 +93,11 @@ function KillPlayer(player) {
     window.setTimeout(function() {
       x--; // Reduce counter by 1
       if(x == 0) { // If counter is 0
-        player.x = 64;
+        /*player.x = 64;
         player.y = 300;
         player.revive();
-        titleText.destroy();
+        titleText.destroy();*/
+        game.state.start(game.state.current);
       } else { // If counter is not at 0 yet
         titleText.setText("You died.\nRespawning in " + x.toString() + " seconds..."); // Update text
         count();
@@ -88,30 +113,6 @@ function create() {
   game.stage.smoothed = false; // No blur on zoom
   
   game.time.advancedTiming = true;
-  
-  var levelDesign = [
-    //Level 1
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                                                                                                                                                                                                          ",
-    "B                                              CMMD                                                                                                                                                                        ",
-    "B                                    CMMD      AXXB                                                                                                                                          CMMMD    CD      CMMMMMMMMMMMM",
-    "B              CMMMMD      CMMD      AXXB      AXXB                                                                                                                                CMMMD     AXXXB    AB      AXXXXXXXXXXXX",
-    "B                          AXXB      AXXXD     AXXB                                       CMMMMMD                                                                          CMMMD             AXXXB    AB      AXXXXXXXXXXXX",
-    "B                          AXXXD     AXXXB     AXXB                                       AXXXXXB                                                                  CMMMD                     AXXXB    AB      AXXXXXXXXXXXX",
-    "XMMMMMMMMMMMMMMMMMMMMMMMMMMXXXXXMMMMMXXXXXMMMMMXXXB          CMMMMMMMMMMD       CMMMMMMMMMXXXXXXXMMMMMMMD      CMMMMMMMMMMMMMMMMD                 CMMMMMMMMMMMMD                             AXXXB    AB      AXXXXXXXXXXXX",
-    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMMMMMMMMMMXXXXXXXXXXXB       AXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB     CMMMMMD     AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXX",
-    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMMMMMMMXXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB                 AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXX",
-    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXB      AXXXXXXXXXXXXXXXXB                 AXXXXXXXXXXXXB                             AXXXB    AB      AXXXXXXXXXXXX"
-  ];
 
   game.physics.startSystem(Phaser.Physics.ARCADE); // Start physics engine
   game.world.enableBody = true; // Apply physics to every object
@@ -146,6 +147,9 @@ function create() {
         var block = game.add.sprite(32*j, 32*i, "block_grass", 2); // Grass (top left) Block
         blocks.add(block);
         block.body.immovable = true;
+      } else if(levelDesign[i][j] == "E") {
+        var enemy = new Enemy(game, 32*j, 32*i, 1, enemySpeed1); // Enemy 1
+        game.add.existing(enemy);
       }
     }
   }
@@ -158,9 +162,6 @@ function create() {
   character_main.checkWorldBounds = true;
   character_main.events.onOutOfBounds.add(KillPlayer, this);
   // character_main.body.collideWorldBounds = true; // Go out of world border or not
-  
-  var enemy = new Enemy(game, 128, 300, 1, enemySpeed1);
-  game.add.existing(enemy);
   
   // This will create a new object called "cursors", inside it will contain 4 objects: up, down, left and right.
   // These are all Phaser.Key objects, so anything you can do with a Key object you can do with these.
@@ -193,6 +194,7 @@ function touchEnemy(enemy, main) {
       KillPlayer(main);
     } else {
       enemy.kill();
+      game.camera.shake(0.01, 500, true, Phaser.Camera.SHAKE_BOTH, true);
     }
   }
 }
@@ -236,6 +238,10 @@ function update() {
     }
   } else {
     isJumping = true;
+  }
+  
+  if(cursors.down.isDown) {
+    character_main.body.velocity.y = 500;
   }
   
   character_main.body.velocity.x = 0;
